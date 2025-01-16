@@ -33,9 +33,8 @@ export function loadDeliveryCreation(app) {
                 body: JSON.stringify({ adresse, pizzaId }),
             });
 
-            if (!response.ok) throw new Error("Failed to create delivery");
+            if (!response.ok) throw new Error("Failed to create delivery, invalid input");
 
-            const newDelivery = await response.json();
             displayResult(`Delivery created`);
         } catch (error) {
             console.error("Error creating delivery:", error);

@@ -17,7 +17,7 @@ export function loadDrones(app) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     serialUuid: generateUUID(),
-                    status: "I_DRIFT",
+                    status: "OPERATIONAL",
                 }),
             });
             if (!response.ok) throw new Error("Failed to create drone");
