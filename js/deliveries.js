@@ -106,7 +106,7 @@ export function loadDeliveries(app) {
             });
             if (!response.ok) {
                 const errorMessage = await response.text();
-                throw new Error(`Failed to assign drone: ${errorMessage}`);
+                throw new Error(`Failed to assign drone because there is no drones available: ${errorMessage}`);
             }
             alert(`Drone successfully assigned to Delivery #${leveringId}`);
             fetchDeliveries(filterCheckbox.checked); // Refresh
@@ -129,7 +129,7 @@ export function loadDeliveries(app) {
             fetchDeliveries(filterCheckbox.checked); // Refresh
         } catch (error) {
             console.error("Error completing delivery:", error);
-            alert("Error: Could not complete delivery.");
+            alert("Error: Could not complete delivery because no drone has picked the order up yet.");
         }
     }
 }
