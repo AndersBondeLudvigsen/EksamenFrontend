@@ -17,7 +17,6 @@ export function loadDeliveryCreation(app) {
         <div id="creation-result" class="mt-3"></div>
     `;
 
-    // Event listener for form submission
     document.getElementById("create-delivery-form").addEventListener("submit", async (event) => {
         event.preventDefault();
 
@@ -26,7 +25,6 @@ export function loadDeliveryCreation(app) {
         const pizzaId = parseInt(document.getElementById("pizzaId").value, 10);
 
         try {
-            // Send a POST request to create a delivery
             const response = await fetch(`${API_BASE}/deliveries`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

@@ -20,14 +20,12 @@ export function loadSimulation(app) {
         </tr>
       </thead>
       <tbody id="delivery-table-body">
-        <!-- Rows will be dynamically added here -->
       </tbody>
     </table>
   `;
 
     const simulatedDeliveries = [];
 
-    // Event listener for simulating delivery creation
     document
         .getElementById("simulate-create")
         .addEventListener("click", async () => {
@@ -53,12 +51,10 @@ export function loadSimulation(app) {
             }
         });
 
-    // Function to add a delivery to the table
     function addDeliveryRow(delivery) {
         const tableBody = document.getElementById("delivery-table-body");
         const row = document.createElement("tr");
 
-        // Determine the drone text
         let droneText = "";
         if (delivery.droneSerialUuid) {
             droneText = `Assigned to Drone ${delivery.droneSerialUuid}`;
@@ -66,7 +62,6 @@ export function loadSimulation(app) {
             droneText = "Awaiting Drone";
         }
 
-        // Determine the station text
         let stationText = "";
         if (delivery.station) {
             stationText = `Station #${delivery.station.stationId} 
@@ -75,7 +70,6 @@ export function loadSimulation(app) {
             stationText = "No Station Assigned";
         }
 
-        // Determine the status text
         let statusText = "";
         if (delivery.faktiskLevering) {
             statusText = "Completed";
@@ -104,8 +98,7 @@ export function loadSimulation(app) {
         tableBody.appendChild(row);
     }
 
-    // Function to complete a delivery
-    // Function to complete a delivery
+
     async function completeDelivery(leveringId, row) {
         try {
             const response = await fetch(`${API_BASE}/deliveries/finish/${leveringId}`, {
@@ -118,10 +111,8 @@ export function loadSimulation(app) {
             const completedDelivery = await response.json();
             const completedTime = new Date(completedDelivery.faktiskLevering).toLocaleString();
 
-            // Update status cell to show completed time
             row.children[7].textContent = `Completed at ${completedTime}`;
 
-            // Update the button
             const completeButton = row.querySelector("button");
             completeButton.textContent = "Completed";
             completeButton.classList.remove("btn-success");

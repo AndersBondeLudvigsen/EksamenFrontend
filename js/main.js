@@ -4,7 +4,7 @@ import { loadSimulation } from './simulate.js';
 import { loadDeliveryCreation } from "./loadDeliveryCreation.js";
 
 function navigate() {
-    const hash = window.location.hash.substring(1) || 'deliveries'; // Default to 'deliveries'
+    const hash = window.location.hash.substring(1) || 'deliveries';
     const app = document.getElementById('app');
 
     switch (hash) {

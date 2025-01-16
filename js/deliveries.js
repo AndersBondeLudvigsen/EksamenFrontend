@@ -12,21 +12,16 @@ export function loadDeliveries(app) {
 
     const filterCheckbox = document.getElementById("filter-queued");
 
-    // Initial fetch
     fetchDeliveries(false);
 
-    // Listen for changes in the checkbox
     filterCheckbox.addEventListener("change", () => {
         fetchDeliveries(filterCheckbox.checked);
     });
 
-    // === AUTO-REFRESH EVERY 60 SECONDS ===
     setInterval(() => {
         fetchDeliveries(filterCheckbox.checked);
     }, 60000);
 
-    // ------------------------------------------------------------------------
-    // Fetch deliveries
     async function fetchDeliveries(onlyQueued) {
         try {
             const url = onlyQueued
@@ -41,13 +36,11 @@ export function loadDeliveries(app) {
         }
     }
 
-    // ------------------------------------------------------------------------
-    // Render deliveries
+
     function renderDeliveries(deliveries) {
         const deliveryList = document.getElementById("delivery-list");
         deliveryList.innerHTML = "";
 
-        // Sort by forventetLevering (earliest first)
         deliveries.sort((a, b) => new Date(a.forventetLevering) - new Date(b.forventetLevering));
 
         deliveries.forEach((delivery) => {
@@ -75,7 +68,6 @@ export function loadDeliveries(app) {
             }</p>
             `;
 
-            // Add "Assign Drone" button if no drone is assigned
             if (!delivery.droneSerialUuid) {
                 const assignDroneBtn = document.createElement("button");
                 assignDroneBtn.className = "btn btn-primary";
@@ -84,7 +76,6 @@ export function loadDeliveries(app) {
                 div.appendChild(assignDroneBtn);
             }
 
-            // Add "Complete Delivery" button if not yet delivered
             if (!delivery.faktiskLevering) {
                 const completeDeliveryBtn = document.createElement("button");
                 completeDeliveryBtn.className = "btn btn-success";
@@ -97,8 +88,7 @@ export function loadDeliveries(app) {
         });
     }
 
-    // ------------------------------------------------------------------------
-    // Assign a drone to a delivery
+
     async function assignDrone(leveringId) {
         try {
             const response = await fetch(`${API_BASE}/deliveries/schedule/${leveringId}`, {
@@ -116,8 +106,6 @@ export function loadDeliveries(app) {
         }
     }
 
-    // ------------------------------------------------------------------------
-    // Complete a delivery
     async function completeDelivery(leveringId) {
         try {
             const response = await fetch(`${API_BASE}/deliveries/finish/${leveringId}`, {

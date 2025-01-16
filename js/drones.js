@@ -9,7 +9,6 @@ export function loadDrones(app) {
 
     fetchDrones();
 
-    // Event listener for creating a new drone
     document.getElementById("create-drone").addEventListener("click", async () => {
         try {
             const response = await fetch(`${API_BASE}/drones`, {
@@ -21,13 +20,12 @@ export function loadDrones(app) {
                 }),
             });
             if (!response.ok) throw new Error("Failed to create drone");
-            fetchDrones(); // Refresh the drone list
+            fetchDrones();
         } catch (error) {
             console.error(error);
         }
     });
 
-    // Fetch all drones from the backend
     async function fetchDrones() {
         try {
             const response = await fetch(`${API_BASE}/drones`);
@@ -39,7 +37,6 @@ export function loadDrones(app) {
         }
     }
 
-    // Render drones in the DOM
     function renderDrones(drones) {
         const droneList = document.getElementById("drone-list");
         if (!droneList) {
@@ -47,7 +44,7 @@ export function loadDrones(app) {
             return;
         }
 
-        droneList.innerHTML = ""; // Clear existing content
+        droneList.innerHTML = "";
 
         drones.forEach((drone) => {
             const div = document.createElement("div");
@@ -71,7 +68,6 @@ export function loadDrones(app) {
             droneList.appendChild(div);
         });
 
-        // Attach event listeners to each button
         document.querySelectorAll(".enable-drone").forEach((button) =>
             button.addEventListener("click", () => updateDroneStatus(button.dataset.id, "enable"))
         );
@@ -83,7 +79,7 @@ export function loadDrones(app) {
         );
     }
 
-    // Update drone status (enable, disable, retire)
+
     async function updateDroneStatus(droneId, action) {
         try {
             const response = await fetch(`${API_BASE}/drones/${action}/${droneId}`, {
@@ -91,14 +87,13 @@ export function loadDrones(app) {
             });
             if (!response.ok) throw new Error(`Failed to ${action} drone #${droneId}`);
             alert(`Drone #${droneId} ${action}d successfully`);
-            fetchDrones(); // Refresh the drone list
+            fetchDrones();
         } catch (error) {
             console.error(`Error updating drone status: ${error.message}`);
             alert(`Error: Could not ${action} drone #${droneId}`);
         }
     }
 
-    // Generate a unique UUID for a new drone
     function generateUUID() {
         return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
             const r = (Math.random() * 16) | 0;
