@@ -36,7 +36,7 @@ export function loadDeliveryCreation(app) {
             if (!response.ok) throw new Error("Failed to create delivery");
 
             const newDelivery = await response.json();
-            displayResult(`Delivery created: ${JSON.stringify(newDelivery)}`);
+            displayResult(`Delivery created`);
         } catch (error) {
             console.error("Error creating delivery:", error);
             displayResult(`Error: ${error.message}`);

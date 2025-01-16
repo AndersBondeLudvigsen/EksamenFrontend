@@ -12,12 +12,21 @@ export function loadDeliveries(app) {
 
     const filterCheckbox = document.getElementById("filter-queued");
 
-    // Initial fetch and attach event listener for the checkbox
+    // Initial fetch
     fetchDeliveries(false);
+
+    // Listen for changes in the checkbox
     filterCheckbox.addEventListener("change", () => {
         fetchDeliveries(filterCheckbox.checked);
     });
 
+    // === AUTO-REFRESH EVERY 60 SECONDS ===
+    setInterval(() => {
+        fetchDeliveries(filterCheckbox.checked);
+    }, 60000);
+
+    // ------------------------------------------------------------------------
+    // Fetch deliveries
     async function fetchDeliveries(onlyQueued) {
         try {
             const url = onlyQueued
@@ -32,10 +41,13 @@ export function loadDeliveries(app) {
         }
     }
 
+    // ------------------------------------------------------------------------
+    // Render deliveries
     function renderDeliveries(deliveries) {
         const deliveryList = document.getElementById("delivery-list");
         deliveryList.innerHTML = "";
 
+        // Sort by forventetLevering (earliest first)
         deliveries.sort((a, b) => new Date(a.forventetLevering) - new Date(b.forventetLevering));
 
         deliveries.forEach((delivery) => {
@@ -85,21 +97,27 @@ export function loadDeliveries(app) {
         });
     }
 
-    // Function to assign a drone to a delivery
+    // ------------------------------------------------------------------------
+    // Assign a drone to a delivery
     async function assignDrone(leveringId) {
         try {
             const response = await fetch(`${API_BASE}/deliveries/schedule/${leveringId}`, {
                 method: "POST",
             });
-            if (!response.ok) throw new Error(`Failed to assign drone to delivery #${leveringId}`);
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                throw new Error(`Failed to assign drone: ${errorMessage}`);
+            }
             alert(`Drone successfully assigned to Delivery #${leveringId}`);
-            fetchDeliveries(filterCheckbox.checked); // Refresh the delivery list
+            fetchDeliveries(filterCheckbox.checked); // Refresh
         } catch (error) {
             console.error("Error assigning drone:", error);
+            alert(error.message);
         }
     }
 
-    // Function to complete a delivery
+    // ------------------------------------------------------------------------
+    // Complete a delivery
     async function completeDelivery(leveringId) {
         try {
             const response = await fetch(`${API_BASE}/deliveries/finish/${leveringId}`, {
@@ -108,7 +126,7 @@ export function loadDeliveries(app) {
             if (!response.ok) throw new Error(`Failed to complete delivery #${leveringId}`);
             const result = await response.json();
             alert(`Delivery #${leveringId} completed successfully`);
-            fetchDeliveries(filterCheckbox.checked); // Refresh the delivery list
+            fetchDeliveries(filterCheckbox.checked); // Refresh
         } catch (error) {
             console.error("Error completing delivery:", error);
             alert("Error: Could not complete delivery.");
